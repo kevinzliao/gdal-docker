@@ -12,8 +12,11 @@ FROM ubuntu:trusty
 
 MAINTAINER Homme Zwaagstra <hrz@geodata.soton.ac.uk>
 
+RUN apt-get update && apt-get install -y dos2unix
+
 # Install the application.
-ADD . /usr/local/src/gdal-docker/
+COPY . /usr/local/src/gdal-docker/
+RUN find ./usr/local/src/gdal-docker/ -type f -print0 | xargs -0 dos2unix && apt-get --purge remove -y dos2unix && rm -rf /var/lib/apt/lists/*
 RUN /usr/local/src/gdal-docker/build.sh
 
 # Externally accessible data is by default put in /data
